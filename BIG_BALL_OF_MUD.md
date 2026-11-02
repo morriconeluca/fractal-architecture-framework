@@ -1,6 +1,6 @@
 # Il problema: "Big Ball of Mud" di Brian Foote e Joseph Yoder
 
-Il paper _Big Ball of Mud_ (Grande Palla di Fango) di Brian Foote e Joseph Yoder è un'opera fondamentale nel campo dell'ingegneria del software. Pubblicato nel 1997 presso il _Department of Computer Science University of Illinois at Urbana-Champaign_, invece di concentrarsi su architetture ideali e pattern di alto livello, esamina con lucidità e pragmatismo l'architettura software _de facto_ più diffusa: sistemi la cui struttura è cresciuta in modo disordinato, casuale e spesso caotico.
+Il paper _Big Ball of Mud_ (Grande Palla di Fango) di Brian Foote e Joseph Yoder è un'opera fondamentale nel campo dell'ingegneria del software. Presentato nel 1997 alla conferenza _PLoP '97_ (_Pattern Languages of Programs_) da due ricercatori del _Department of Computer Science_ della _University of Illinois at Urbana-Champaign_, invece di concentrarsi su architetture ideali e pattern di alto livello, esamina con lucidità e pragmatismo l'architettura software _de facto_ più diffusa: sistemi la cui struttura è cresciuta in modo disordinato, casuale e spesso caotico.
 
 > _La `Big Ball of Mud` è una giungla di codice spaghetti, strutturata a caso, tentacolare, sciatta, tenuta insieme con nastro adesivo e fil di ferro. [...] Il suo codice mostra segni inconfondibili di crescita non regolamentata e di riparazioni ripetute e opportune. [...] La struttura complessiva del sistema potrebbe non essere mai stata ben definita. Se lo era, potrebbe essersi erosa fino a diventare irriconoscibile._
 
@@ -16,11 +16,11 @@ Quali sono le sue caratteristiche? Un sistema che sta degenerando in una `Big Ba
 
 - **Codice Rigido (Fortemente Accoppiato)**
 
-  > Il sintomo di questa patologia si manifesta quando i componenti del software sono così strettamente intrecciati tra loro che anche un cambiamento piccolo e logicamente semplice richiede una cascata di modifiche in molteplici punti del sistema. Ciò accade quando una parte del codice dipende dai dettagli di implementazione privati di un altra parte del codice.
+  > Il sintomo di questa patologia si manifesta quando i componenti del software sono così strettamente intrecciati tra loro che anche un cambiamento piccolo e logicamente semplice richiede una cascata di modifiche in molteplici punti del sistema. Ciò accade quando una parte del codice dipende dai dettagli di implementazione privati di un'altra parte del codice.
 
 - **Codice Fragile (Bassa Coesione)**
 
-  > Questa seconda patologia si manifesta quando una modifica in un punto del sistema causa la rottura inaspettata di una funzionalità in un'altra area non correlata. Le unità di codice hanno perso la loro specializzazione, diventano contenitori di logica eterogenea. Per comprendere una singola funzionalità di business (es. gestire un pagamento), lo sviluppatore è costretto a rintracciare pezzi di codice sparsi in decine di file e directory non correlate.
+  > Questa seconda patologia si manifesta quando una modifica in un punto del sistema causa la rottura inaspettata di una funzionalità in un'altra area non correlata. Le unità di codice hanno perso la loro specializzazione e sono diventate contenitori di logica eterogenea. Per comprendere una singola funzionalità di business (es. gestire un pagamento), lo sviluppatore è costretto a rintracciare pezzi di codice sparsi in decine di file e directory non correlate.
 
 ## L'Entropia: Quali sono le Forze che Generano una Big Ball of Mud
 
@@ -52,11 +52,11 @@ Una `Big Ball of Mud` non è il risultato di un singolo errore, ma **l'esito fin
 
 ## L'Eresia di un Concetto: Cosa c'è di Buono
 
-Il paper non condanna la `Big Ball of Mud`, ma la riconosce come una conseguenza naturale e talvolta inevitabile delle pressioni economiche e pratiche dello sviluppo software.Un'architettura _informale_ può essere addirittura vantaggiosa nelle prime fasi di un progetto, quando l'esplorazione e l'apprendimento sono più importanti della rigida aderenza a un piano. Sebbene disprezzata dagli architetti, questa _non-architettura_ è estremamente popolare, è la più diffusa, perciò deve necessariamente "fare qualcosa di giusto".
+Il paper non condanna la `Big Ball of Mud`, ma la riconosce come una conseguenza naturale e talvolta inevitabile delle pressioni economiche e pratiche dello sviluppo software. Un'architettura _informale_ può essere addirittura vantaggiosa nelle prime fasi di un progetto, quando l'esplorazione e l'apprendimento sono più importanti della rigida aderenza a un piano. Sebbene disprezzata dagli architetti, questa _non-architettura_ è estremamente popolare, anzi la più diffusa, perciò deve necessariamente "fare qualcosa di giusto".
 
 ## Cosa fa di Giusto?
 
-Come pattern, la `Big Ball of Mud` è una soluzione allo sviluppo iterativo-incrementale promosso dalla filosofia _Agile_. La sua architettura cresce _spontaneamente_. I grandi piani architetturali _Waterfall_ erano rigidi e spesso fallivano. I requisiti di un sistema software complesso evolvono. Le esigenze degli utenti evolvono. **Far evolvere il sistema in modo incrementale, aggiungendo funzionalità un pezzo alla volta, questo permette al sistema di adattarsi e crescere progressivamente.** Ma questa crescita incontrollata porta a un'erosione della struttura architettonica, trasformando il sistema in una pozza di fango.
+Come pattern, la `Big Ball of Mud` asseconda la crescita incrementale (_Piecemeal Growth_), lo stesso approccio iterativo-incrementale che sarà poi promosso dalla filosofia _Agile_. La sua architettura cresce _spontaneamente_. I grandi piani architetturali _Waterfall_ erano rigidi e spesso fallivano. I requisiti di un sistema software complesso evolvono. Le esigenze degli utenti evolvono. **Far evolvere il sistema in modo incrementale, aggiungendo funzionalità un pezzo alla volta, gli permette di adattarsi e crescere progressivamente.** Ma questa crescita incontrollata porta a un'erosione della struttura architettonica, trasformando il sistema in una pozza di fango.
 
 ## Conclusione
 
