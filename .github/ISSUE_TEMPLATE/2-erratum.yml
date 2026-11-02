@@ -1,0 +1,34 @@
+name: Erratum
+description: A contradiction between rules, between rules and examples, or between rules and the containment matrix (§6.8).
+title: "erratum: "
+labels: ["erratum"]
+body:
+  - type: textarea
+    id: sections
+    attributes:
+      label: Affected sections
+      description: Quote the contradicting passages, with their section numbers.
+    validations:
+      required: true
+  - type: textarea
+    id: case
+    attributes:
+      label: Concrete case
+      description: A directory tree or an import where the contradiction occurs.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: intent
+    attributes:
+      label: Intended reading
+      description: The reading you believe is intended, and why.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have read the whole specification and the contributing guidelines.
+          required: true

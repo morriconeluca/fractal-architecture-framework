@@ -1,0 +1,25 @@
+name: Translation
+description: Coordinate work on the English translation of the specification.
+title: "translation: "
+labels: ["translation"]
+body:
+  - type: input
+    id: sections
+    attributes:
+      label: Sections
+      description: The sections you intend to translate.
+      placeholder: "§4, §5"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Terminology doubts or anything else worth discussing before starting.
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: The translation will preserve the meaning exactly. Defects found while translating will be reported in separate issues.
+          required: true

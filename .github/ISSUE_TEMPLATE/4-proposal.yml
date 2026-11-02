@@ -1,0 +1,58 @@
+name: Proposal
+description: Add, remove or change a concept, a norm, a recommendation or a reference model.
+title: "proposal: "
+labels: ["proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposals are evaluated by **conceptual economy**, not by the size of the change. Do not open a pull request until the proposal is labeled `accepted`.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What a real codebase cannot express, or expresses badly, under the current specification. Include a concrete directory tree.
+    validations:
+      required: true
+  - type: textarea
+    id: insufficiency
+    attributes:
+      label: Why existing concepts are insufficient
+      description: Show that the problem cannot be solved with current Logical Domains, Roles, Horizontal Hierarchies or Declarations.
+    validations:
+      required: true
+  - type: textarea
+    id: text
+    attributes:
+      label: Proposed text
+      description: The exact wording, in Italian or English, and where it goes.
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact on conformance
+      description: Which currently conformant codebases become non-conformant, and vice versa.
+    validations:
+      required: true
+  - type: textarea
+    id: sections
+    attributes:
+      label: Affected sections
+      description: Definitions, laws, containment matrix (§6.8), classification completeness (§6.9), examples, Table of Contents.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Including doing nothing.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have read the whole specification and the contributing guidelines.
+          required: true

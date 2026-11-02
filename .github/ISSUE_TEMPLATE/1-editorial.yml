@@ -1,0 +1,31 @@
+name: Editorial
+description: Typos, grammar, formatting, broken links or anchors. The meaning does not change.
+title: "editorial: "
+labels: ["editorial"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Editorial changes may also be submitted directly as a pull request, without opening an issue.
+  - type: input
+    id: location
+    attributes:
+      label: Location
+      description: File and section.
+      placeholder: "FAF.md, §6.3.2"
+    validations:
+      required: true
+  - type: textarea
+    id: change
+    attributes:
+      label: Current text and proposed text
+      description: Quote the current text and write the corrected one.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: The change does not alter the meaning of the text.
+          required: true

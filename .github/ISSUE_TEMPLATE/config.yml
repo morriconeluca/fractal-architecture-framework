@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contributing guidelines
+    url: https://github.com/morriconeluca/fractal-architecture-framework/blob/main/CONTRIBUTING.md
+    about: Read the guidelines before opening an issue.

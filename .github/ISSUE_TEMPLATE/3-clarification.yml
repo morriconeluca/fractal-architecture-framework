@@ -1,0 +1,36 @@
+name: Clarification
+description: An ambiguous rule to be reworded so that it admits a single reading, without changing its outcome.
+title: "clarification: "
+labels: ["clarification"]
+body:
+  - type: textarea
+    id: sections
+    attributes:
+      label: Affected sections
+      description: Quote the ambiguous passages, with their section numbers.
+    validations:
+      required: true
+  - type: textarea
+    id: case
+    attributes:
+      label: Concrete case
+      description: A directory tree or an import that admits more than one reading. State the readings.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: intent
+    attributes:
+      label: Intended reading
+      description: The reading you believe is intended, and why. Optionally, a proposed wording.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have read the whole specification and the contributing guidelines.
+          required: true
+        - label: The clarification does not change the conformance of any codebase. Otherwise, I will open a Proposal.
+          required: true
