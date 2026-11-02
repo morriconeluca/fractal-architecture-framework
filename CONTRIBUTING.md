@@ -12,13 +12,13 @@ Thank you for your interest in FAF. This repository contains a **specification**
 
 Every contribution belongs to exactly one of the following kinds. State the kind in the title of your issue or pull request.
 
-| Kind            | Changes conformance? | Description                                                                                         | Process                                  |
-| :-------------- | :------------------: | :-------------------------------------------------------------------------------------------------- | :--------------------------------------- |
-| **Editorial**   |          No          | Typos, grammar, formatting, broken links or anchors. The meaning does not change.                   | Open a pull request directly.            |
-| **Erratum**     |   Yes, restores intent   | Contradictions between rules, between rules and examples, or between rules and the matrix in §6.8. | Open an issue, then a pull request.      |
-| **Clarification** |        No          | Rewording an ambiguous rule so that it admits a single reading, without changing its outcome.       | Open an issue, then a pull request.      |
-| **Proposal**    |         Yes          | Adding, removing or changing a concept, a norm, a recommendation or a reference model.              | Open an issue and wait for acceptance before writing a pull request. |
-| **Translation** |          No          | Work on the English translation.                                                                    | Open an issue to coordinate, then a pull request. |
+| Kind              | Changes conformance? | Description                                                                                        | Process                                                              |
+| :---------------- | :------------------: | :------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| **Editorial**     |          No          | Typos, grammar, formatting, broken links or anchors. The meaning does not change.                  | Open a pull request directly.                                        |
+| **Erratum**       | Yes, restores intent | Contradictions between rules, between rules and examples, or between rules and the matrix in §6.8. | Open an issue, then a pull request.                                  |
+| **Clarification** |          No          | Rewording an ambiguous rule so that it admits a single reading, without changing its outcome.      | Open an issue, then a pull request.                                  |
+| **Proposal**      |         Yes          | Adding, removing or changing a concept, a norm, a recommendation or a reference model.             | Open an issue and wait for acceptance before writing a pull request. |
+| **Translation**   |          No          | Work on the English translation.                                                                   | Open an issue to coordinate, then a pull request.                    |
 
 If you are unsure whether a change alters conformance, treat it as a **Proposal**.
 
