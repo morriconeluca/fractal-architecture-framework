@@ -1,3 +1,4 @@
+<!-- markdownlint-disable-file MD041 -->
 <!-- The title must follow Conventional Commits, using the contribution kind as type (e.g. `erratum: fix containment of Layers in §6.8`). -->
 
 ## Related Issue
