@@ -1,6 +1,6 @@
 # Fractal Architecture Framework (FAF)
 
-**_Working Draft - 2 Novembre 2026_**
+**_Working Draft - 14 Novembre 2026_**
 
 ---
 
@@ -368,7 +368,7 @@ do-something/                                  <-- Fragment con Role 'util'
 
 ### 6.2. Root Fragments
 
-Il _Root Fragment_ è il Logical Domain Functional, a denominazione libera (es. `src/`, `app/`), deputato a fungere da punto di frontiera con strumenti esterni (es. il _file-system routing_ di Next.js, Astro, ecc.). È raccomandato che il nome di un Root Fragment non adotti il prefisso `_`.
+Il _Root Fragment_ è il Logical Domain Functional, a denominazione libera (es. `src/`, `app/`), deputato a fungere da punto di frontiera con strumenti esterni (es. punti di ingresso di bundler, _file-system routing_ di Next.js, Astro, ecc.) oppure a conferire evidenza immediata alla radice del Fractal Tree alle partizioni funzionali di maggiore rilevanza semantica del sistema, evitando che l'annidamento le occulti in domini interni. È raccomandato che il nome di un Root Fragment non adotti il prefisso `_`.
 
 Un Root Fragment può essere collocato esclusivamente come origine di un Fractal Tree o come figlio diretto di un altro Root Fragment. Ciascun Root Fragment è identificato esclusivamente da una Declaration, che ne enumera anche i Root Fragments figli diretti. Il Root Fragment non ha Master Node né Access Node.
 
@@ -405,7 +405,7 @@ src/                                           <-- Root Fragment
         └── app.tsx                            <-- Root Node (Rank 0)
 ```
 
-> **Nota**: Le Declarations enumerano `main.css` e `main.tsx` come Root Nodes di `src/`, con Ranks rispettivamente 0 e 1, `app/` come Root Fragment figlio diretto di `src/` e `app.tsx` come Root Node di `app/`. La Horizontal Hierarchy di `src/` autorizza `main.tsx` a importare `main.css`; una distinta Declaration autorizza `src/main.tsx` a importare `src/app/app.tsx`. Il Rank di `app.tsx` non partecipa alla Horizontal Hierarchy di `src/`. I file `vite-env.d.ts` e `README.md` sono identificati come Foreign Nodes da Declarations.
+> **Nota**: Le Declarations enumerano `main.css` e `main.tsx` come Root Nodes di `src/`, con Ranks rispettivamente 0 e 1, `app/` come Root Fragment figlio diretto di `src/` e `app.tsx` come Root Node di `app/`. Pur non essendo imposta da strumenti esterni, `app/` è modellata come Root Fragment figlio diretto di `src/` per porre in evidenza alla radice del Fractal Tree l'unità primaria dell'applicazione senza incapsularla in una Private Category o nel Fractal Branch di `src/`. La Horizontal Hierarchy di `src/` autorizza `main.tsx` a importare `main.css`; una distinta Declaration autorizza `src/main.tsx` a importare `src/app/app.tsx`. Il Rank di `app.tsx` non partecipa alla Horizontal Hierarchy di `src/`. I file `vite-env.d.ts` e `README.md` sono identificati come Foreign Nodes da Declarations.
 
 ##### Esempio 6.2.3.2. Root Fragments gerarchici con File-System Routing (Next.js App Router)
 
@@ -495,7 +495,7 @@ Nell'adozione dell'Atomic Design è raccomandato classificare lo stadio _pages_ 
 
 #### 6.3.5. Mimetic Path Structure e Path Sub-Categories
 
-Una _Mimetic Path Structure_ è la configurazione topologica, stabilita da una Declaration su una Category di Fragments (es. `_apis/`, `_pages/`, `_routes/`, `_commands/`, `_handlers/`), deputata a mappare sul file system uno spazio di indirizzamento gerarchico esterno (quali endpoint HTTP/REST, alberi di URL per il routing programmatico di interfacce utente, gerarchie di comandi CLI, alberi di topic in sistemi a eventi o namespace di procedure RPC/IPC). A differenza dei Root Fragments, deputati a soddisfare contratti sul file system scansionati direttamente da strumenti esterni, la Mimetic Path Structure modella la corrispondenza con lo spazio di indirizzamento esterno all'interno della tassonomia delle Categories. È interdetta l'applicazione di una Mimetic Path Structure a una Category di Category Nodes.
+Una _Mimetic Path Structure_ è la configurazione topologica, stabilita da una Declaration su una Category di Fragments (es. `_apis/`, `_pages/`, `_routes/`, `_commands/`, `_handlers/`), deputata a mappare sul file system uno spazio di indirizzamento gerarchico esterno (quali endpoint HTTP/REST, alberi di URL per il routing programmatico di interfacce utente, gerarchie di comandi CLI, alberi di topic in sistemi a eventi o namespace di procedure RPC/IPC). A differenza dell'impiego di Root Fragments per soddisfare contratti sul file system scansionati direttamente da strumenti esterni, la Mimetic Path Structure modella la corrispondenza con lo spazio di indirizzamento esterno all'interno della tassonomia delle Categories. È interdetta l'applicazione di una Mimetic Path Structure a una Category di Category Nodes.
 
 La Mimetic Path Structure si articola nei seguenti elementi:
 
@@ -961,17 +961,23 @@ L'utilizzo dei Path Aliases è soggetto a due vincoli:
 
 ### 8.1. Collocazione per Prossimità e Rilevanza di Dominio
 
-È raccomandato collocare ciascuna unità in funzione dei consumatori dell'unità e della rilevanza del concetto implementato nel dominio applicativo:
+È raccomandato collocare ciascuna unità in funzione dei consumatori effettivamente presenti nella codebase e della rilevanza del concetto implementato nel dominio applicativo, senza anticiparne il posizionamento per consumatori non ancora esistenti:
 
-- **Prossimità e minimo antenato comune**: un dettaglio implementativo privo di valenza autonoma nel dominio applicativo risiede nel punto più specifico compatibile con i propri consumatori — in una Private Category del singolo Fragment o Root Fragment i cui Logical Nodes diretti consumano tale dettaglio in via esclusiva, oppure nel Fractal Branch del minimo Logical Domain antenato comune a tutti i consumatori di tale dettaglio.
-- **Rilevanza semantica di dominio**: un'unità che modella un concetto primario del dominio applicativo risiede nel Logical Domain Organizational che esprime la competenza architetturale dell'unità (es. un Layer o una Category del Root Layer o del Fractal Branch pertinente), anche qualora conti un unico consumatore.
+- **Prossimità e minimo antenato comune**: un dettaglio implementativo privo di valenza autonoma nel dominio applicativo risiede nel punto più specifico compatibile con i propri consumatori correnti:
+  - nella Private Category corrispondente al proprio Role all'interno del singolo Fragment o Root Fragment i cui Logical Nodes figli diretti consumano tale dettaglio in via esclusiva, anche qualora sia importato da più Fragment Nodes o Root Nodes del medesimo dominio oppure dai relativi Sub-Graph Nodes;
+  - nel Fractal Branch del minimo Logical Domain antenato comune a tutti i consumatori di tale dettaglio, quando i consumatori non sono confinati ai soli Logical Nodes figli diretti di un unico Fragment o Root Fragment (es. consumatori distribuiti tra sotto-alberi distinti, tra un Fragment e un proprio Sub-Fragment, oppure Category Nodes).
+- **Rilevanza semantica di dominio**: un'unità che modella una partizione primaria o un concetto fondante del dominio applicativo risiede nella posizione che ne rende immediatamente leggibile il ruolo nell'architettura — quale Root Fragment alla radice del Fractal Tree oppure nel Logical Domain Organizational che esprime la competenza architetturale dell'unità (es. un Layer o una Category del Root Layer o del Fractal Branch pertinente) — anche qualora conti un unico consumatore. La potenziale riusabilità tecnica di un'unità non costituisce rilevanza semantica di dominio.
 
 ### 8.2. Controllo della Profondità e Dualità tra Incapsulamento e Horizontal Hierarchy
 
-L'annidamento eccessivo dei Logical Domains accresce il carico cognitivo di attraversamento dell'albero e occulta le entità primarie del sistema sotto catene di domini intermedi, compromettendo la leggibilità della scomposizione. È raccomandato governare la profondità del Fractal Tree bilanciando due meccanismi strutturali duali:
+L'annidamento eccessivo dei Logical Domains accresce il carico cognitivo di attraversamento dell'albero e occulta le entità primarie del sistema sotto catene di domini intermedi, compromettendo la leggibilità della scomposizione; d'altra parte, l'esposizione superflua di dettagli implementativi amplia indebitamente il perimetro dei consumatori autorizzati. È raccomandato governare la profondità del Fractal Tree attraverso due meccanismi strutturali duali, secondo un preciso ordine di priorità:
 
-- **Incapsulamento verticale** (mediante Private Categories e Fractal Branches): sottrae un'unità alla visibilità esterna confinandola nel sotto-albero del dominio che la governa, ed è adottato quando l'unità costituisce un dettaglio interno non destinato all'esposizione.
-- **Ordinamento orizzontale** (mediante Horizontal Hierarchies su Sub-Categories, Categories, Sub-Layers o Layers): mantiene le partizioni al medesimo livello di profondità, preservando la visibilità esterna di ciascuna partizione rispetto al dominio contenitore e vincolando in modo unidirezionale le relative dipendenze senza introdurre ulteriore annidamento. Qualora uno di due Fragments o di due Category Nodes debba dipendere dall'altro restando entrambi esposti dal dominio contenitore, è raccomandato ripartire tali unità in Sub-Categories ordinate da una Horizontal Hierarchy.
+- **Incapsulamento verticale** (mediante Private Categories e Fractal Branches): sottrae un'unità alla visibilità esterna confinandola nel sotto-albero del dominio che la governa. È raccomandato adottare l'incapsulamento verticale come scelta predefinita ogniqualvolta l'unità costituisca un dettaglio interno non destinato all'esposizione al di fuori del perimetro dei propri consumatori.
+- **Ordinamento orizzontale** (mediante Horizontal Hierarchies tra Logical Domains — Sub-Categories, Categories, Sub-Layers o Layers — oppure tra Root Nodes): mantiene le partizioni o i nodi al medesimo livello di profondità, preservandone la visibilità rispetto al dominio contenitore e vincolando in modo unidirezionale le relative dipendenze senza introdurre ulteriore annidamento. Poiché amplia la visibilità rispetto all'incapsulamento, è raccomandato non adottare tali Horizontal Hierarchies come prima scelta, bensì ricorrervi esclusivamente in presenza di almeno una delle seguenti esigenze:
+  - **Esposizione esterna delle dipendenze**: rendere visibili anche all'esterno del confine dei consumatori unità da cui questi dipendono, laddove l'incapsulamento nelle Private Categories o nei Fractal Branches di tali consumatori finirebbe per sottrarle alla visibilità esterna;
+  - **Evidenza semantica**: portare in evidenza le parti del software di maggiore rilevanza semantica — finalità che giustifica parimenti l'adozione dei Root Fragments alla radice del Fractal Tree — in modo che la struttura rifletta direttamente il dominio (_Screaming Architecture_), evitando che l'annidamento nasconda le parti fondamentali del sistema.
+
+È raccomandato non collocare né promuovere un'unità nel Fractal Branch di un dominio superiore a quello individuato dai suoi consumatori effettivi per eludere la Legge della Separazione tra Pari tra unità sorelle: qualora l'unità costituisca un dettaglio interno consumato da un singolo Fragment fratello senza esigenza di esposizione esterna, è raccomandato incapsularla nella Private Category di quest'ultimo; qualora invece uno di due Fragments o di due Category Nodes debba dipendere dall'altro restando entrambi esposti dal dominio contenitore, è raccomandato ripartire tali unità in Sub-Categories ordinate da una Horizontal Hierarchy.
 
 ### 8.3. Evoluzione Iterativa e Ricorsiva dell'Architettura
 
@@ -980,7 +986,7 @@ La struttura di un sistema software conforme a FAF non richiede una definizione 
 A ogni livello del Fractal Tree, è raccomandato adattare l'architettura selezionando la trasformazione dotata della massima economia concettuale tra tre operazioni strutturali:
 
 - **Estrazione**: separazione di Symbols autonomi in Logical Nodes distinti, quali ulteriori Fragment Nodes con Roles differenti o Category Nodes di una Private Category, oppure trasformazione di un Fragment Node in un Sub-Fragment collocato in una Private Category, quando la competenza estratta acquisisce dettagli collaboranti con Roles distinti o richiede un Sub-Graph Node dedicato. L'Estrazione confina l'unità estratta nel sotto-albero del Logical Domain genitore, senza renderla accessibile a Logical Nodes esterni a tale Logical Domain.
-- **Promozione**: spostamento di un'unità in una Category, eventualmente collocata in un Layer, di un Fractal Branch che ne amplia i consumatori autorizzati (es. dalla Private Category di un Fragment al Fractal Branch del medesimo Fragment, oppure dal Fractal Branch di un Logical Domain al Fractal Branch di un Logical Domain antenato). Quanto più elevato è il Logical Domain genitore del Fractal Branch destinatario, tanto più ampio è l'insieme dei consumatori autorizzati. La Promozione presuppone consumatori esterni al perimetro corrente e dipendenze ammesse dalle regole di visibilità e dalle Horizontal Hierarchies applicabili.
+- **Promozione**: spostamento di un'unità in una Category, eventualmente collocata in un Layer, di un Fractal Branch che ne amplia i consumatori autorizzati (es. dalla Private Category di un Fragment al Fractal Branch del medesimo Fragment, oppure dal Fractal Branch di un Logical Domain al Fractal Branch di un Logical Domain antenato). Quanto più elevato è il Logical Domain genitore del Fractal Branch destinatario, tanto più ampio è l'insieme dei consumatori autorizzati. La Promozione interviene alla comparsa effettiva di consumatori esterni al perimetro corrente, ha per destinazione il Fractal Branch del minimo Logical Domain antenato comune a tutti i consumatori effettivi e presuppone dipendenze ammesse dalle regole di visibilità e dalle Horizontal Hierarchies applicabili.
 - **Contrazione**: rimozione o riassorbimento di Layers, Sub-Layers, Sub-Categories, Fractal Branches o Sub-Fragments divenuti ridondanti o sproporzionati rispetto alla complessità effettiva del sotto-problema risolto (ivi inclusa la riconduzione di un Fractal Branch o di un Root Layer dalla stratificazione in Layers all'esposizione diretta di Categories).
 
 Finché il contratto esposto dall'Access Node di un Fragment rimane invariato, ogni trasformazione confinata nel sotto-albero del Fragment resta trasparente ai consumatori esterni al Fragment.
