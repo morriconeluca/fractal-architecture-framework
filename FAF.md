@@ -1,6 +1,6 @@
 # Fractal Architecture Framework (FAF)
 
-**_Working Draft - 14 Novembre 2026_**
+**_Working Draft - 15 Novembre 2026_**
 
 ---
 
@@ -11,6 +11,8 @@ Questa specifica descrive il _Fractal Architecture Framework_ (_FAF_), un insiem
 ### 1.1. Natura del Framework
 
 FAF non è una libreria né un runtime, bensì la specializzazione per l'ecosistema TypeScript del paradigma _Fractal Architecture_, definito come l'applicazione ricorsiva del principio di autosimilarità all'organizzazione della codebase. Il framework condivide la finalità di una struttura autoesplicativa, tipica della _Screaming Architecture_, e l'approccio all'evoluzione incrementale proprio della _Evolutionary Architecture_.
+
+Mentre la programmazione orientata agli oggetti fonda l'incapsulamento e l'astrazione sulle classi, FAF li realizza attraverso la modularità di file e directory, privilegiando il paradigma funzionale e la composizione rispetto all'ereditarietà.
 
 ### 1.2. Stato del Documento e Conformità
 
@@ -192,6 +194,8 @@ Un _Fractal Tree_ è il sotto-albero della codebase con origine in una directory
   > Una _Horizontal Hierarchy_ è l'assegnazione, stabilita da una Declaration, di un _Rank_ espresso da un numero naturale a ciascun elemento di un insieme di elementi fratelli: Logical Nodes oppure Logical Domains figli diretti del medesimo Logical Domain, senza commistione tra Logical Nodes e Logical Domains. Una Horizontal Hierarchy autorizza dipendenze esclusivamente tra elementi del proprio insieme, da un elemento di Rank $N$ verso un elemento di Rank strettamente inferiore $M$ ($M < N$).
   >
   > Più Horizontal Hierarchies possono coesistere sotto lo stesso genitore soltanto se ordinano insiemi disgiunti di figli diretti. I Ranks di Horizontal Hierarchies distinte non sono confrontabili.
+  >
+  > Tra Logical Domains, una Declaration stabilisce una Horizontal Hierarchy individuando un singolo Logical Domain genitore e ordinando su almeno due Ranks distinti figli diretti effettivamente presenti sotto di esso, salvo il caso delle Sub-Categories, per le quali una Declaration può altresì stabilire modelli di Horizontal Hierarchy estesi al Fractal Tree.
 
 - **Nomenclatura**
 
@@ -246,63 +250,62 @@ La derivabilità meccanica tra Symbols non implica identità architetturale: Sym
 
 La Declaration del catalogo assegna a ciascun Role diverso da un Sub-Graph Role un Rank, in funzione del dominio e dello stack tecnologico. I Logical Nodes figli diretti di ciascun Fragment sono ordinati dalla Horizontal Hierarchy in cui ciascun Fragment Node assume il Rank del proprio Role, mentre l'Access Node e i Sub-Graph Nodes occupano congiuntamente il Rank immediatamente superiore al Rank massimo del catalogo. Ogni Fragment Node diverso dal Master Node ha Rank strettamente inferiore al Rank del Master Node.
 
+Poiché i Ranks del catalogo governano esclusivamente la composizione interna dei Fragment Nodes di un singolo Fragment e non una gerarchia tra Categories del Fractal Tree, nella Declaration del catalogo è raccomandato attenersi ai criteri seguenti:
+
+- **Competenza architetturale e minimalità**: definire esclusivamente i Roles effettivamente richiesti, evitando Roles speculativi e qualifiche generiche, puramente infrastrutturali o coincidenti con costrutti sintattici del linguaggio e classi.
+- **Ordinamento e allineamento dei Ranks**: attribuire a un Role un Rank strettamente inferiore a quello di un altro Role unicamente quando i rispettivi Fragment Nodes possono coesistere nel medesimo Fragment con dipendenza diretta o transitiva; assegnare il medesimo Rank ai Roles ausiliari privi di dipendenza reciproca nel Fragment; allineare sul Rank massimo del catalogo i Roles le cui unità esistono esclusivamente come Master Nodes, imponendo la composizione di responsabilità primarie distinte tramite i rispettivi Access Nodes.
+- **Separazione rispetto ai confini contrattuali**: qualora una medesima famiglia concettuale o tecnologica comprenda sia Fragment Nodes sorgente da cui altri Fragment Nodes (quali `type`) derivano contratti, sia Fragment Nodes consumatori che dipendono da tali contratti, distinguere Roles specifici collocati ai rispettivi lati di tale confine anziché adottare un unico Role generico che produrrebbe dipendenze cicliche nel Fragment (es. nel modello seguente: `constant` prima di `type` rispetto a `config` e `mock` dopo `type`; `style`, `module` e `recipe` prima di `type` rispetto a `styled` dopo `type`; `schema` e `contract` prima di `type` rispetto a `handler` e `route` dopo `type`).
+
 ##### Modello di Riferimento per i Roles
 
-FAF realizza la modularità mediante la composizione anziché mediante l'ereditarietà: i Roles qualificano le competenze architetturali che concorrono per composizione progressiva alla costruzione di un Fragment, non gerarchie di classi o costrutti sintattici del linguaggio.
+Il modello seguente ha valore puramente esemplificativo:
 
-Il modello seguente costituisce un esempio di riferimento: l'allineamento sul medesimo Rank delle competenze di coordinamento applicativo impedisce di accorpare molteplici responsabilità primarie nei Fragment Nodes di uno stesso Fragment e impone la composizione di Fragments e Sub-Fragments distinti attraverso i rispettivi Access Nodes.
-
-- **Rank 0: Asset Statici Puri**
+- **Rank 0: Fondamentali Statici e Primitivi**
+  - `constant`: Valori immutabili e letterali primitivi.
   - `font`: Asset tipografici.
   - `image`: Asset grafici e iconografici.
-- **Rank 1: Stili e Markup Dichiarativi**
+- **Rank 1: Definizioni Dichiarative**
   - `markup`: Documenti dichiarativi di markup o testo.
+  - `model`: Definizioni dichiarative di strutture o schemi dati.
   - `module`: Fogli di stile CSS Modules con scope locale.
   - `style`: Fogli di stile CSS.
-- **Rank 2: Costanti Primitive**
-  - `constant`: Valori immutabili e letterali primitivi.
-- **Rank 3: Modelli Dichiarativi di Dati**
-  - `model`: Definizioni dichiarative di strutture o schemi dati.
-- **Rank 4: Ricette Grafiche**
+- **Rank 2: Varianti di Stile e Schemi di Validazione**
   - `recipe`: Varianti e composizioni di stile.
-- **Rank 5: Schemi di Validazione**
   - `schema`: Schemi di validazione e parsing runtime.
-- **Rank 6: Tipizzazione**
+- **Rank 3: Contratti Dichiarativi di Interfaccia**
+  - `contract`: Specifiche dichiarative di endpoint, procedure o eventi.
+- **Rank 4: Tipizzazione Statica**
   - `type`: Definizioni statiche di tipo.
-- **Rank 7: Errori Tipizzati**
+- **Rank 5: Costrutti Tipizzati di Produzione**
+  - `config`: Parametri e oggetti di configurazione tipizzati.
   - `error`: Costruttori e strutture di errore tipizzati.
-- **Rank 8: Dati di Simulazione**
+  - `styled`: Costrutti stilizzati vincolati a contratti di tipo.
+- **Rank 6: Dati di Simulazione**
   - `mock`: Dati sintetici, fixture e stub.
-- **Rank 9: Configurazione Applicativa**
-  - `config`: Parametri e oggetti di configurazione.
-- **Rank 10: Stili con Contratto di Tipo**
-  - `styled`: Componenti stilizzati con binding di tipo.
-- **Rank 11: Helper Funzionali**
+- **Rank 7: Elaborazione Funzionale Pura**
   - `util`: Funzioni di utilità ed elaborazione pura.
-- **Rank 12: Costrutti con Stato Incapsulato**
-  - `class`: Costrutti con stato incapsulato o strutture dati dedicate.
-- **Rank 13: Pattern Creazionali**
-  - `factory`: Funzioni factory per la creazione di istanze o strutture.
-- **Rank 14: Istanze Preconfigurate**
-  - `instance`: Istanze preconfigurate di oggetti o client.
-- **Rank 15: Logiche di Coordinamento Locale**
-  - `controller`: Coordinatori del flusso di esecuzione locale.
-  - `handler`: Gestori di eventi o esecutori di comandi.
-  - `hook`: Hook e funzioni con gestione del ciclo di vita.
-- **Rank 16: Logiche di Coordinamento Applicativo**
+- **Rank 8: Funzioni Creazionali**
+  - `factory`: Funzioni creazionali di istanze o chiusure con stato incapsulato.
+- **Rank 9: Istanze Preconfigurate**
+  - `instance`: Istanze o client preconfigurati.
+- **Rank 10: Connettori a Dati e Servizi Esterni**
   - `api`: Client e integrazioni con servizi esterni.
+  - `repository`: Moduli di persistenza o accesso ai dati.
+- **Rank 11: Logiche di Coordinamento Locale**
+  - `handler`: Gestori di eventi o esecutori di comandi e richieste.
+  - `hook`: Hook e funzioni con gestione del ciclo di vita.
+- **Rank 12: Logiche di Coordinamento Applicativo**
   - `component`: Componenti di interfaccia utente.
   - `context`: Contesti per la condivisione dello stato.
   - `job`: Processori di task schedulati o code asincrone.
   - `layout`: Strutture di layout e impaginazione.
   - `middleware`: Intercettatori di flussi o richieste.
   - `page`: Pagine o viste di navigazione.
-  - `repository`: Moduli di persistenza o accesso ai dati.
-  - `route`: Definizioni di rotte.
+  - `route`: Unità di rotta ed endpoint applicativi.
   - `router`: Aggregatori e distributori di rotte.
   - `service`: Moduli di logica di business e orchestrazione.
   - `store`: Gestori di stato globale o condiviso.
-- **Rank 17: Rank Sommitale**
+- **Rank 13: Rank Sommitale**
   - `index.ts` (Access Node): Interfaccia pubblica esclusiva del Fragment.
   - `spec` (Sub-Graph Node): Entry point dell'Execution Sub-Graph di Test.
   - `story` (Sub-Graph Node): Entry point dell'Execution Sub-Graph di Storybook.
@@ -313,15 +316,15 @@ Il modello seguente costituisce un esempio di riferimento: l'allineamento sul me
 
 ```text
 example/                                       <-- Fragment con Role 'component'
-  ├── example.component.tsx                    <-- Master Node (Rank 16)
-  ├── example.constant.ts                      <-- Fragment Node (Rank 2)
-  ├── example.hook.ts                          <-- Fragment Node (Rank 15)
+  ├── example.component.tsx                    <-- Master Node (Rank 12)
+  ├── example.constant.ts                      <-- Fragment Node (Rank 0)
+  ├── example.hook.ts                          <-- Fragment Node (Rank 11)
   ├── example.module.css                       <-- Fragment Node (Rank 1)
-  ├── example.spec.tsx                         <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-  ├── example.story.tsx                        <-- Sub-Graph Node dell'Execution Sub-Graph di Storybook (Rank 17)
-  ├── example.type.ts                          <-- Fragment Node (Rank 6)
-  ├── example.util.ts                          <-- Fragment Node (Rank 11)
-  ├── index.ts                                 <-- Access Node (Rank 17)
+  ├── example.spec.tsx                         <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+  ├── example.story.tsx                        <-- Sub-Graph Node dell'Execution Sub-Graph di Storybook (Rank 13)
+  ├── example.type.ts                          <-- Fragment Node (Rank 4)
+  ├── example.util.ts                          <-- Fragment Node (Rank 7)
+  ├── index.ts                                 <-- Access Node (Rank 13)
   └── README.md                                <-- Foreign Node
 ```
 
@@ -342,25 +345,25 @@ export type * from './example.type';
 
 ```text
 use-example/                                   <-- Fragment con Role 'hook'
-  ├── index.ts                                 <-- Access Node (Rank 17)
+  ├── index.ts                                 <-- Access Node (Rank 13)
   ├── README.md                                <-- Foreign Node
-  ├── use-example.constant.ts                  <-- Fragment Node (Rank 2)
-  ├── use-example.hook.ts                      <-- Master Node (Rank 15)
-  ├── use-example.spec.ts                      <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-  └── use-example.type.ts                      <-- Fragment Node (Rank 6)
+  ├── use-example.constant.ts                  <-- Fragment Node (Rank 0)
+  ├── use-example.hook.ts                      <-- Master Node (Rank 11)
+  ├── use-example.spec.ts                      <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+  └── use-example.type.ts                      <-- Fragment Node (Rank 4)
 ```
 
-> **Nota**: Il Master Node `use-example.hook.ts` ha il Role del Fragment, `hook`. `use-example.hook.ts` (Rank 15) può importare `use-example.type.ts` (Rank 6) e `use-example.constant.ts` (Rank 2), mentre non può dipendere dall'Access Node né dal Sub-Graph Node di test.
+> **Nota**: Il Master Node `use-example.hook.ts` ha il Role del Fragment, `hook`. `use-example.hook.ts` (Rank 11) può importare `use-example.type.ts` (Rank 4) e `use-example.constant.ts` (Rank 0), mentre non può dipendere dall'Access Node né dal Sub-Graph Node di test.
 
 ##### Esempio 6.1.4.4. Fragment con Role 'util'
 
 ```text
 do-something/                                  <-- Fragment con Role 'util'
-  ├── do-something.constant.ts                 <-- Fragment Node (Rank 2)
-  ├── do-something.spec.ts                     <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-  ├── do-something.type.ts                     <-- Fragment Node (Rank 6)
-  ├── do-something.util.ts                     <-- Master Node (Rank 11)
-  ├── index.ts                                 <-- Access Node (Rank 17)
+  ├── do-something.constant.ts                 <-- Fragment Node (Rank 0)
+  ├── do-something.spec.ts                     <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+  ├── do-something.type.ts                     <-- Fragment Node (Rank 4)
+  ├── do-something.util.ts                     <-- Master Node (Rank 7)
+  ├── index.ts                                 <-- Access Node (Rank 13)
   └── README.md                                <-- Foreign Node
 ```
 
@@ -368,7 +371,7 @@ do-something/                                  <-- Fragment con Role 'util'
 
 ### 6.2. Root Fragments
 
-Il _Root Fragment_ è il Logical Domain Functional, a denominazione libera (es. `src/`, `app/`), deputato a fungere da punto di frontiera con strumenti esterni (es. punti di ingresso di bundler, _file-system routing_ di Next.js, Astro, ecc.) oppure a conferire evidenza immediata alla radice del Fractal Tree alle partizioni funzionali di maggiore rilevanza semantica del sistema, evitando che l'annidamento le occulti in domini interni. È raccomandato che il nome di un Root Fragment non adotti il prefisso `_`.
+Il _Root Fragment_ è il Logical Domain Functional, a denominazione libera (es. `src/`, `app/`), deputato a fungere da punto di frontiera con strumenti esterni (es. punti di ingresso di bundler, _file-system routing_ di Next.js, Astro, ecc.) oppure a conferire evidenza immediata alla radice del Fractal Tree alle partizioni funzionali di maggiore rilevanza semantica del sistema, evitando che domini intermedi privi di valenza propria le occultino. È raccomandato che il nome di un Root Fragment non adotti il prefisso `_`.
 
 Un Root Fragment può essere collocato esclusivamente come origine di un Fractal Tree o come figlio diretto di un altro Root Fragment. Ciascun Root Fragment è identificato esclusivamente da una Declaration, che ne enumera anche i Root Fragments figli diretti. Il Root Fragment non ha Master Node né Access Node.
 
@@ -449,6 +452,8 @@ In base alla forma che la Declaration del catalogo stabilisce per ciascun Role, 
 
 Un Role dotato di estensioni implicite adotta la forma Category Nodes nell'intero Fractal Tree; una Declaration che gli assegni la forma Fragments è contraddittoria.
 
+Per i restanti Roles, nella Declaration del catalogo è raccomandato adottare la forma Category Nodes quando gli elementi classificati non richiedono composizione interna (Fragment Nodes, Private Categories o Fractal Branches) né Sub-Graph Nodes dedicati (es. `constant`, `model`, `type`, `config`, `mock`); negli altri casi è raccomandata la forma Fragments.
+
 Tra Fragments fratelli e tra Category Nodes fratelli è interdetta qualsiasi Horizontal Hierarchy.
 
 #### 6.3.2. Sub-Categories
@@ -474,8 +479,8 @@ La relazione di dipendenza è rigidamente unidirezionale: nessun Logical Node ap
 
 #### 6.3.4. Horizontal Hierarchies per Categories e Sub-Categories
 
-- **Tra Categories**: Categories sorelle non private possono essere ordinate da una Horizontal Hierarchy stabilita in funzione del dominio, inclusa l'adozione dei Ranks dei rispettivi Roles. Tra Private Categories sorelle è interdetta qualsiasi Horizontal Hierarchy.
-- **Tra Sub-Categories**: Sub-Categories sorelle, anche interne a una Private Category, possono essere ordinate da una Horizontal Hierarchy stabilita in funzione del dominio oppure conforme a uno dei due modelli di riferimento seguenti.
+- **Tra Categories**: Categories sorelle non private possono essere ordinate esclusivamente da Horizontal Hierarchies stabilite per il singolo Logical Domain genitore. Tra Private Categories sorelle è interdetta qualsiasi Horizontal Hierarchy.
+- **Tra Sub-Categories**: Sub-Categories sorelle, anche interne a una Private Category, possono essere ordinate da Horizontal Hierarchies stabilite per il singolo Logical Domain genitore oppure da modelli di Horizontal Hierarchy estesi al Fractal Tree, quali i due modelli di riferimento seguenti. Un modello esteso al Fractal Tree ripartisce su almeno due Ranks distinti nomi di Sub-Categories distinti da ogni nome di Category del catalogo e istanzia una Horizontal Hierarchy in ciascuna Category o Sub-Category del Fractal Tree in cui compaiano Sub-Categories figlie dirette con tali nomi.
 
 ##### Modelli di Riferimento per le Sub-Categories
 
@@ -521,18 +526,18 @@ Un Fragment può essere collocato esclusivamente come figlio diretto di una Cate
 _components/                                   <-- Category (Role 'component')
   ├── _atoms/                                  <-- Sub-Category (Rank 0)
   │   ├── icon/                                <-- Fragment con Role 'component'
-  │   │   ├── icon.component.tsx               <-- Master Node (Rank 16)
-  │   │   ├── icon.spec.tsx                    <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-  │   │   ├── icon.type.ts                     <-- Fragment Node (Rank 6)
-  │   │   ├── index.ts                         <-- Access Node (Rank 17)
+  │   │   ├── icon.component.tsx               <-- Master Node (Rank 12)
+  │   │   ├── icon.spec.tsx                    <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+  │   │   ├── icon.type.ts                     <-- Fragment Node (Rank 4)
+  │   │   ├── index.ts                         <-- Access Node (Rank 13)
   │   │   └── README.md                        <-- Foreign Node
   │   └── ...
   └── _molecules/                              <-- Sub-Category (Rank 1)
       ├── input/                               <-- Fragment con Role 'component'
-      │   ├── index.ts                         <-- Access Node (Rank 17)
-      │   ├── input.component.tsx              <-- Master Node (Rank 16)
-      │   ├── input.spec.tsx                   <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-      │   ├── input.type.ts                    <-- Fragment Node (Rank 6)
+      │   ├── index.ts                         <-- Access Node (Rank 13)
+      │   ├── input.component.tsx              <-- Master Node (Rank 12)
+      │   ├── input.spec.tsx                   <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+      │   ├── input.type.ts                    <-- Fragment Node (Rank 4)
       │   └── README.md                        <-- Foreign Node
       └── ...
 ```
@@ -568,15 +573,15 @@ _styles/                                       <-- Category (Role 'style')
 
 ```text
 example/                                       <-- Fragment con Role 'component'
-  ├── example.component.tsx                    <-- Master Node (Rank 16)
-  ├── example.spec.tsx                         <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-  ├── example.type.ts                          <-- Fragment Node (Rank 6)
-  ├── index.ts                                 <-- Access Node (Rank 17)
+  ├── example.component.tsx                    <-- Master Node (Rank 12)
+  ├── example.spec.tsx                         <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+  ├── example.type.ts                          <-- Fragment Node (Rank 4)
+  ├── index.ts                                 <-- Access Node (Rank 13)
   ├── README.md                                <-- Foreign Node
   └── _components/                             <-- Private Category (Role 'component')
       └── example-child/                       <-- Sub-Fragment con Role 'component'
-          ├── example-child.component.tsx      <-- Master Node (Rank 16)
-          ├── index.ts                         <-- Access Node (Rank 17)
+          ├── example-child.component.tsx      <-- Master Node (Rank 12)
+          ├── index.ts                         <-- Access Node (Rank 13)
           └── README.md                        <-- Foreign Node
 ```
 
@@ -590,17 +595,17 @@ _apis/                                         <-- Parent Category (Role 'api')
       ├── _[todo-id]/                          <-- Path Sub-Category dinamica
       │   ├── _status/                         <-- Path Sub-Category statica
       │   │   └── patch-todo-status/           <-- Path Fragment
-      │   │       ├── index.ts                 <-- Access Node (Rank 17)
-      │   │       └── patch-todo-status.api.ts <-- Master Node (Rank 16)
+      │   │       ├── index.ts                 <-- Access Node (Rank 13)
+      │   │       └── patch-todo-status.api.ts <-- Master Node (Rank 10)
       │   └── get-todo/                        <-- Path Fragment
-      │       ├── get-todo.api.ts              <-- Master Node (Rank 16)
-      │       └── index.ts                     <-- Access Node (Rank 17)
+      │       ├── get-todo.api.ts              <-- Master Node (Rank 10)
+      │       └── index.ts                     <-- Access Node (Rank 13)
       ├── get-todos/                           <-- Path Fragment
-      │   ├── get-todos.api.ts                 <-- Master Node (Rank 16)
-      │   └── index.ts                         <-- Access Node (Rank 17)
+      │   ├── get-todos.api.ts                 <-- Master Node (Rank 10)
+      │   └── index.ts                         <-- Access Node (Rank 13)
       └── post-todo/                           <-- Path Fragment
-          ├── index.ts                         <-- Access Node (Rank 17)
-          └── post-todo.api.ts                 <-- Master Node (Rank 16)
+          ├── index.ts                         <-- Access Node (Rank 13)
+          └── post-todo.api.ts                 <-- Master Node (Rank 10)
 ```
 
 > **Nota**: `_apis/` è la Parent Category di una Mimetic Path Structure con Action Catalog (`get`, `post`, `patch`) in cui `_todos/`, `_[todo-id]/` e `_status/` operano come Path Sub-Categories che propagano il Role `api` ai Path Fragments (`get-todos/`, `post-todo/`, `get-todo/`, `patch-todo-status/`). All'interno di `_todos/` e di `_[todo-id]/`, Path Sub-Categories annidate e Path Fragments coesistono legittimamente al medesimo livello in totale isolamento reciproco.
@@ -610,20 +615,20 @@ _apis/                                         <-- Parent Category (Role 'api')
 ```text
 _pages/                                        <-- Parent Category (Role 'page')
   ├── home/                                    <-- Path Fragment ('/')
-  │   ├── home.page.tsx                        <-- Master Node (Rank 16)
-  │   └── index.ts                             <-- Access Node (Rank 17)
+  │   ├── home.page.tsx                        <-- Master Node (Rank 12)
+  │   └── index.ts                             <-- Access Node (Rank 13)
   └── _blog/                                   <-- Path Sub-Category statica ('/blog')
       ├── _[post-id]/                          <-- Path Sub-Category dinamica ('/blog/:postId')
       │   ├── _comments/                       <-- Path Sub-Category statica ('/blog/:postId/comments')
       │   │   └── post-comments/               <-- Path Fragment ('/blog/:postId/comments')
-      │   │       ├── index.ts                 <-- Access Node (Rank 17)
-      │   │       └── post-comments.page.tsx   <-- Master Node (Rank 16)
+      │   │       ├── index.ts                 <-- Access Node (Rank 13)
+      │   │       └── post-comments.page.tsx   <-- Master Node (Rank 12)
       │   └── blog-post/                       <-- Path Fragment ('/blog/:postId')
-      │       ├── blog-post.page.tsx           <-- Master Node (Rank 16)
-      │       └── index.ts                     <-- Access Node (Rank 17)
+      │       ├── blog-post.page.tsx           <-- Master Node (Rank 12)
+      │       └── index.ts                     <-- Access Node (Rank 13)
       └── blog-feed/                           <-- Path Fragment ('/blog')
-          ├── blog-feed.page.tsx               <-- Master Node (Rank 16)
-          └── index.ts                         <-- Access Node (Rank 17)
+          ├── blog-feed.page.tsx               <-- Master Node (Rank 12)
+          └── index.ts                         <-- Access Node (Rank 13)
 ```
 
 > **Nota**: In assenza di un Action Catalog su `_pages/`, ciascun segmento dell'URL è rappresentato da una Path Sub-Category (`_blog/`, `_[post-id]/`, `_comments/`), mentre i Path Fragments (`home/`, `blog-feed/`, `blog-post/`, `post-comments/`) adottano la denominazione ordinaria in _kebab-case_ e implementano le pagine attestate sulle rispettive coordinate, incluso `home/` alla radice `/`.
@@ -648,7 +653,7 @@ Un Layer non può essere fratello di una Category o di una Sub-Category.
 
 #### 6.4.2. Horizontal Hierarchies tra Layers
 
-Per i Layers il framework non prevede modelli tassonomici predefiniti: le relazioni di dipendenza tra Layers fratelli sono governate esclusivamente da Horizontal Hierarchies stabilite in funzione del dominio applicativo.
+Per i Layers il framework non prevede modelli tassonomici predefiniti né modelli estesi al Fractal Tree: le relazioni di dipendenza tra Layers fratelli sono governate esclusivamente da Horizontal Hierarchies stabilite per il singolo Logical Domain genitore in funzione del dominio applicativo.
 
 #### 6.4.3. Esempi di Riferimento
 
@@ -692,12 +697,12 @@ Al pari del Layer, il Root Layer non è associato a un singolo Role, non impone 
 src/                                           <-- Root Layer (origine del Fractal Tree)
   ├── _components/                             <-- Category (Role 'component', Rank 2)
   │   └── button/                              <-- Fragment con Role 'component'
-  │       ├── button.component.tsx             <-- Master Node (Rank 16)
-  │       └── index.ts                         <-- Access Node (Rank 17)
+  │       ├── button.component.tsx             <-- Master Node (Rank 12)
+  │       └── index.ts                         <-- Access Node (Rank 13)
   ├── _hooks/                                  <-- Category (Role 'hook', Rank 1)
   │   └── use-toggle/                          <-- Fragment con Role 'hook'
-  │       ├── index.ts                         <-- Access Node (Rank 17)
-  │       └── use-toggle.hook.ts               <-- Master Node (Rank 15)
+  │       ├── index.ts                         <-- Access Node (Rank 13)
+  │       └── use-toggle.hook.ts               <-- Master Node (Rank 11)
   └── _types/                                  <-- Category (Role 'type', Rank 0)
       └── size.type.ts                         <-- Category Node con Role esplicito 'type'
 ```
@@ -756,8 +761,8 @@ src/                                           <-- Root Fragment (origine del Fr
   │       └── _components/                     <-- Category (Role 'component')
   │           └── _atoms/                      <-- Sub-Category (Rank 0)
   │               └── button/                  <-- Fragment con Role 'component'
-  │                   ├── button.component.tsx <-- Master Node (Rank 16)
-  │                   ├── index.ts             <-- Access Node (Rank 17)
+  │                   ├── button.component.tsx <-- Master Node (Rank 12)
+  │                   ├── index.ts             <-- Access Node (Rank 13)
   │                   └── ...
   └── app/                                     <-- Root Fragment
       ├── app.tsx                              <-- Root Node
@@ -765,8 +770,8 @@ src/                                           <-- Root Fragment (origine del Fr
       │   └── ...
       └── _layouts/                            <-- Private Category di app/ (Role 'layout')
           └── shell/                           <-- Fragment con Role 'layout'
-              ├── index.ts                     <-- Access Node (Rank 17)
-              ├── shell.layout.tsx             <-- Master Node (Rank 16)
+              ├── index.ts                     <-- Access Node (Rank 13)
+              ├── shell.layout.tsx             <-- Master Node (Rank 12)
               └── ...
 ```
 
@@ -776,17 +781,17 @@ src/                                           <-- Root Fragment (origine del Fr
 
 ```text
 button/                                        <-- Fragment con Role 'component'
-  ├── button.component.tsx                     <-- Master Node (Rank 16)
-  ├── index.ts                                 <-- Access Node (Rank 17)
+  ├── button.component.tsx                     <-- Master Node (Rank 12)
+  ├── index.ts                                 <-- Access Node (Rank 13)
   ├── _button@shared/                          <-- Fractal Branch di button/
   │   └── _components/                         <-- Category (Role 'component')
   │       └── button-icon/                     <-- Sub-Fragment con Role 'component'
-  │           ├── button-icon.component.tsx    <-- Master Node (Rank 16)
-  │           └── index.ts                     <-- Access Node (Rank 17)
+  │           ├── button-icon.component.tsx    <-- Master Node (Rank 12)
+  │           └── index.ts                     <-- Access Node (Rank 13)
   └── _components/                             <-- Private Category di button/ (Role 'component')
       └── button-label/                        <-- Sub-Fragment con Role 'component'
-          ├── button-label.component.tsx       <-- Master Node (Rank 16)
-          └── index.ts                         <-- Access Node (Rank 17)
+          ├── button-label.component.tsx       <-- Master Node (Rank 12)
+          └── index.ts                         <-- Access Node (Rank 13)
 ```
 
 > **Nota**: Collocando il Sub-Fragment `button-icon/` nel Fractal Branch `_button@shared/` anziché nella Private Category `_components/`, `button-icon/index.ts` risulta importabile sia da `button.component.tsx` sia da `button-label.component.tsx`, pur restando integralmente incapsulato nel confine di `button/`.
@@ -808,61 +813,61 @@ _styles/                                       <-- Category (Role 'style')
 
 ```text
 table/                                          <-- Fragment con Role 'component'
-  ├── index.ts                                  <-- Access Node (Rank 17)
-  ├── table.component.tsx                       <-- Master Node (Rank 16)
-  ├── table.hook.ts                             <-- Fragment Node (Rank 15)
-  ├── table.recipe.ts                           <-- Fragment Node (Rank 4)
-  ├── table.spec.tsx                            <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-  ├── table.type.ts                             <-- Fragment Node (Rank 6)
+  ├── index.ts                                  <-- Access Node (Rank 13)
+  ├── table.component.tsx                       <-- Master Node (Rank 12)
+  ├── table.hook.ts                             <-- Fragment Node (Rank 11)
+  ├── table.recipe.ts                           <-- Fragment Node (Rank 2)
+  ├── table.spec.tsx                            <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+  ├── table.type.ts                             <-- Fragment Node (Rank 4)
   ├── _components/                              <-- Private Category di table/ (Role 'component')
   │   ├── _components@shared/                   <-- Fractal Branch di _components/
   │   │   └── _hooks/                           <-- Category (Role 'hook')
   │   │       └── use-table-context/            <-- Sub-Fragment con Role 'hook'
-  │   │           ├── index.ts                  <-- Access Node (Rank 17)
-  │   │           └── use-table-context.hook.ts <-- Master Node (Rank 15)
+  │   │           ├── index.ts                  <-- Access Node (Rank 13)
+  │   │           └── use-table-context.hook.ts <-- Master Node (Rank 11)
   │   ├── table-body/                           <-- Sub-Fragment con Role 'component'
-  │   │   ├── index.ts                          <-- Access Node (Rank 17)
-  │   │   ├── table-body.component.tsx          <-- Master Node (Rank 16)
-  │   │   ├── table-body.recipe.ts              <-- Fragment Node (Rank 4)
-  │   │   └── table-body.type.ts                <-- Fragment Node (Rank 6)
+  │   │   ├── index.ts                          <-- Access Node (Rank 13)
+  │   │   ├── table-body.component.tsx          <-- Master Node (Rank 12)
+  │   │   ├── table-body.recipe.ts              <-- Fragment Node (Rank 2)
+  │   │   └── table-body.type.ts                <-- Fragment Node (Rank 4)
   │   ├── table-cell/                           <-- Sub-Fragment con Role 'component'
-  │   │   ├── index.ts                          <-- Access Node (Rank 17)
-  │   │   ├── table-cell.component.tsx          <-- Master Node (Rank 16)
-  │   │   ├── table-cell.recipe.ts              <-- Fragment Node (Rank 4)
-  │   │   └── table-cell.type.ts                <-- Fragment Node (Rank 6)
+  │   │   ├── index.ts                          <-- Access Node (Rank 13)
+  │   │   ├── table-cell.component.tsx          <-- Master Node (Rank 12)
+  │   │   ├── table-cell.recipe.ts              <-- Fragment Node (Rank 2)
+  │   │   └── table-cell.type.ts                <-- Fragment Node (Rank 4)
   │   ├── table-head/                           <-- Sub-Fragment con Role 'component'
-  │   │   ├── index.ts                          <-- Access Node (Rank 17)
-  │   │   ├── table-head.component.tsx          <-- Master Node (Rank 16)
-  │   │   ├── table-head.recipe.ts              <-- Fragment Node (Rank 4)
-  │   │   └── table-head.type.ts                <-- Fragment Node (Rank 6)
+  │   │   ├── index.ts                          <-- Access Node (Rank 13)
+  │   │   ├── table-head.component.tsx          <-- Master Node (Rank 12)
+  │   │   ├── table-head.recipe.ts              <-- Fragment Node (Rank 2)
+  │   │   └── table-head.type.ts                <-- Fragment Node (Rank 4)
   │   ├── table-header-cell/                    <-- Sub-Fragment con Role 'component'
-  │   │   ├── index.ts                          <-- Access Node (Rank 17)
-  │   │   ├── table-header-cell.component.tsx   <-- Master Node (Rank 16)
-  │   │   ├── table-header-cell.hook.ts         <-- Fragment Node (Rank 15)
-  │   │   ├── table-header-cell.recipe.ts       <-- Fragment Node (Rank 4)
-  │   │   └── table-header-cell.type.ts         <-- Fragment Node (Rank 6)
+  │   │   ├── index.ts                          <-- Access Node (Rank 13)
+  │   │   ├── table-header-cell.component.tsx   <-- Master Node (Rank 12)
+  │   │   ├── table-header-cell.hook.ts         <-- Fragment Node (Rank 11)
+  │   │   ├── table-header-cell.recipe.ts       <-- Fragment Node (Rank 2)
+  │   │   └── table-header-cell.type.ts         <-- Fragment Node (Rank 4)
   │   └── table-row/                            <-- Sub-Fragment con Role 'component'
-  │       ├── index.ts                          <-- Access Node (Rank 17)
-  │       ├── table-row.component.tsx           <-- Master Node (Rank 16)
-  │       ├── table-row.recipe.ts               <-- Fragment Node (Rank 4)
-  │       └── table-row.type.ts                 <-- Fragment Node (Rank 6)
+  │       ├── index.ts                          <-- Access Node (Rank 13)
+  │       ├── table-row.component.tsx           <-- Master Node (Rank 12)
+  │       ├── table-row.recipe.ts               <-- Fragment Node (Rank 2)
+  │       └── table-row.type.ts                 <-- Fragment Node (Rank 4)
   ├── _table@shared/                            <-- Fractal Branch di table/
   │   ├── _contexts/                            <-- Category (Role 'context', Rank 1)
   │   │   └── table-context/                    <-- Sub-Fragment con Role 'context'
-  │   │       ├── index.ts                      <-- Access Node (Rank 17)
-  │   │       ├── table-context.context.ts      <-- Master Node (Rank 16)
-  │   │       └── table-context.type.ts         <-- Fragment Node (Rank 6)
+  │   │       ├── index.ts                      <-- Access Node (Rank 13)
+  │   │       ├── table-context.context.ts      <-- Master Node (Rank 12)
+  │   │       └── table-context.type.ts         <-- Fragment Node (Rank 4)
   │   └── _types/                               <-- Category (Role 'type', Rank 0)
   │       └── table-sort.type.ts                <-- Category Node con Role esplicito 'type'
   └── _utils/                                   <-- Private Category di table/ (Role 'util')
       └── sort-table-rows/                      <-- Sub-Fragment con Role 'util'
-          ├── index.ts                          <-- Access Node (Rank 17)
-          ├── sort-table-rows.spec.ts           <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 17)
-          ├── sort-table-rows.type.ts           <-- Fragment Node (Rank 6)
-          └── sort-table-rows.util.ts           <-- Master Node (Rank 11)
+          ├── index.ts                          <-- Access Node (Rank 13)
+          ├── sort-table-rows.spec.ts           <-- Sub-Graph Node dell'Execution Sub-Graph di Test (Rank 13)
+          ├── sort-table-rows.type.ts           <-- Fragment Node (Rank 4)
+          └── sort-table-rows.util.ts           <-- Master Node (Rank 7)
 ```
 
-> **Nota**: Il Fragment `table/` compone cinque Sub-Fragments reciprocamente isolati nella Private Category `_components/` (`table-body/`, `table-cell/`, `table-head/`, `table-header-cell/`, `table-row/`), aggregati da `table.component.tsx` senza dipendenze orizzontali tra fratelli. Poiché `context` e `component` condividono il Rank 16 e le Private Categories sono unidirezionali, il contesto non risiede nei Fragment Nodes diretti di `table/`, bensì nel Fractal Branch `_table@shared/`: la Category `_types/` (Rank 0) espone il Category Node `table-sort.type.ts` sia alla Private Category `_utils/` sia alla Category `_contexts/` (Rank 1), la quale incapsula il Sub-Fragment `table-context/`. L'hook di lettura `use-table-context/` è invece confinato nel Fractal Branch più specifico `_components/_components@shared/`, risultando accessibile ai soli sotto-componenti di `_components/` (che consumano `table-context/index.ts` per il tramite di `use-table-context/index.ts`) e inaccessibile a `table.component.tsx` e a `_utils/`.
+> **Nota**: Il Fragment `table/` compone cinque Sub-Fragments reciprocamente isolati nella Private Category `_components/` (`table-body/`, `table-cell/`, `table-head/`, `table-header-cell/`, `table-row/`), aggregati da `table.component.tsx` senza dipendenze orizzontali tra fratelli. Poiché `context` e `component` condividono il Rank 12 e le Private Categories sono unidirezionali, il contesto non risiede nei Fragment Nodes diretti di `table/`, bensì nel Fractal Branch `_table@shared/`: la Category `_types/` (Rank 0) espone il Category Node `table-sort.type.ts` sia alla Private Category `_utils/` sia alla Category `_contexts/` (Rank 1), la quale incapsula il Sub-Fragment `table-context/`. L'hook di lettura `use-table-context/` è invece confinato nel Fractal Branch più specifico `_components/_components@shared/`, risultando accessibile ai soli sotto-componenti di `_components/` (che consumano `table-context/index.ts` per il tramite di `use-table-context/index.ts`) e inaccessibile a `table.component.tsx` e a `_utils/`.
 
 ### 6.7. Foreign Domains
 
@@ -966,18 +971,21 @@ L'utilizzo dei Path Aliases è soggetto a due vincoli:
 - **Prossimità e minimo antenato comune**: un dettaglio implementativo privo di valenza autonoma nel dominio applicativo risiede nel punto più specifico compatibile con i propri consumatori correnti:
   - nella Private Category corrispondente al proprio Role all'interno del singolo Fragment o Root Fragment i cui Logical Nodes figli diretti consumano tale dettaglio in via esclusiva, anche qualora sia importato da più Fragment Nodes o Root Nodes del medesimo dominio oppure dai relativi Sub-Graph Nodes;
   - nel Fractal Branch del minimo Logical Domain antenato comune a tutti i consumatori di tale dettaglio, quando i consumatori non sono confinati ai soli Logical Nodes figli diretti di un unico Fragment o Root Fragment (es. consumatori distribuiti tra sotto-alberi distinti, tra un Fragment e un proprio Sub-Fragment, oppure Category Nodes).
-- **Rilevanza semantica di dominio**: un'unità che modella una partizione primaria o un concetto fondante del dominio applicativo risiede nella posizione che ne rende immediatamente leggibile il ruolo nell'architettura — quale Root Fragment alla radice del Fractal Tree oppure nel Logical Domain Organizational che esprime la competenza architetturale dell'unità (es. un Layer o una Category del Root Layer o del Fractal Branch pertinente) — anche qualora conti un unico consumatore. La potenziale riusabilità tecnica di un'unità non costituisce rilevanza semantica di dominio.
+- **Rilevanza semantica di dominio e leggibilità per scala**: in virtù della natura frattale del framework, l'evidenza del dominio (_Screaming Architecture_) opera ricorsivamente a ogni livello di scala e non consiste nell'appiattire le unità alla radice del Fractal Tree: la radice esprime l'identità del sistema alla scala più ampia e ciascun Logical Domain Functional rivela al proprio interno i concetti primari del sotto-problema che governa. A parità di scala, è raccomandato collocare un'unità che modella una partizione primaria o un concetto fondante dove il suo ruolo è immediatamente leggibile — quale Root Fragment alla radice del Fractal Tree oppure nel Logical Domain Organizational che ne esprime la competenza (es. un Layer o una Category del Root Layer o del Fractal Branch pertinente) — anche qualora conti un unico consumatore; la potenziale riusabilità tecnica di un'unità non costituisce rilevanza semantica di dominio.
+- **Corrispondenza tra contenimento e flusso delle dipendenze**: è raccomandato che la gerarchia dei Logical Domains rifletta la direzione effettiva delle dipendenze, collocando in rapporto di contenimento unità in cui l'una orchestra l'altra anziché disporle come fratelli paritetici il cui ordine di dipendenza non risulterebbe leggibile dal file system; specularmente, è raccomandato non incapsulare un'unità fondante del dominio all'interno di un collaboratore ausiliario solo perché quest'ultimo la invoca, facendo invece coordinare entrambi dal dominio superiore.
 
 ### 8.2. Controllo della Profondità e Dualità tra Incapsulamento e Horizontal Hierarchy
 
-L'annidamento eccessivo dei Logical Domains accresce il carico cognitivo di attraversamento dell'albero e occulta le entità primarie del sistema sotto catene di domini intermedi, compromettendo la leggibilità della scomposizione; d'altra parte, l'esposizione superflua di dettagli implementativi amplia indebitamente il perimetro dei consumatori autorizzati. È raccomandato governare la profondità del Fractal Tree attraverso due meccanismi strutturali duali, secondo un preciso ordine di priorità:
+L'annidamento eccessivo dei Logical Domains accresce il carico cognitivo di attraversamento dell'albero e occulta le entità primarie sotto catene di domini intermedi, mentre l'esposizione superflua di dettagli implementativi amplia indebitamente il perimetro dei consumatori autorizzati. È raccomandato governare la profondità del Fractal Tree attraverso due meccanismi duali, secondo un preciso ordine di priorità:
 
-- **Incapsulamento verticale** (mediante Private Categories e Fractal Branches): sottrae un'unità alla visibilità esterna confinandola nel sotto-albero del dominio che la governa. È raccomandato adottare l'incapsulamento verticale come scelta predefinita ogniqualvolta l'unità costituisca un dettaglio interno non destinato all'esposizione al di fuori del perimetro dei propri consumatori.
-- **Ordinamento orizzontale** (mediante Horizontal Hierarchies tra Logical Domains — Sub-Categories, Categories, Sub-Layers o Layers — oppure tra Root Nodes): mantiene le partizioni o i nodi al medesimo livello di profondità, preservandone la visibilità rispetto al dominio contenitore e vincolando in modo unidirezionale le relative dipendenze senza introdurre ulteriore annidamento. Poiché amplia la visibilità rispetto all'incapsulamento, è raccomandato non adottare tali Horizontal Hierarchies come prima scelta, bensì ricorrervi esclusivamente in presenza di almeno una delle seguenti esigenze:
-  - **Esposizione esterna delle dipendenze**: rendere visibili anche all'esterno del confine dei consumatori unità da cui questi dipendono, laddove l'incapsulamento nelle Private Categories o nei Fractal Branches di tali consumatori finirebbe per sottrarle alla visibilità esterna;
-  - **Evidenza semantica**: portare in evidenza le parti del software di maggiore rilevanza semantica — finalità che giustifica parimenti l'adozione dei Root Fragments alla radice del Fractal Tree — in modo che la struttura rifletta direttamente il dominio (_Screaming Architecture_), evitando che l'annidamento nasconda le parti fondamentali del sistema.
+- **Incapsulamento**: è raccomandato adottare l'incapsulamento come scelta predefinita per sottrarre i dettagli implementativi alla visibilità esterna, articolandolo secondo due gradi progressivi:
+  - **nel singolo Fragment**, componendo nei Fragment Nodes (ordinati dalla Horizontal Hierarchy interna dei Roles) le competenze distinte di una medesima unità logica che non richiedono sotto-domini propri né Sub-Graph Nodes dedicati, senza introdurre ulteriori directory;
+  - **nel sotto-albero**, mediante Private Categories e Fractal Branches ogniqualvolta un dettaglio interno ecceda i Fragment Nodes di un singolo Fragment, rendendo il flusso delle dipendenze leggibile direttamente dalla geometria delle directory (dal genitore verso le proprie Private Categories, con isolamento reciproco tra fratelli, e dai sotto-alberi verso il Fractal Branch del minimo antenato comune).
+- **Ordinamento orizzontale** (mediante Horizontal Hierarchies tra Logical Domains — Sub-Categories, Categories, Sub-Layers o Layers — oppure tra Root Nodes): mantiene le partizioni o i nodi al medesimo livello di profondità, preservandone la visibilità rispetto al dominio contenitore e vincolando in modo unidirezionale le relative dipendenze senza ulteriore annidamento. Poiché amplia la visibilità rispetto all'incapsulamento e demanda alle Declarations la direzione delle dipendenze tra fratelli, è raccomandato non adottarlo come prima scelta, bensì ricorrervi esclusivamente per:
+  - **Esposizione esterna delle dipendenze**: rendere visibili anche all'esterno del confine dei consumatori unità da cui questi dipendono, laddove l'incapsulamento nelle Private Categories o nei Fractal Branches di tali consumatori le sottrarrebbe alla visibilità esterna;
+  - **Evidenza semantica**: portare in evidenza al medesimo livello di scala le parti di maggiore rilevanza semantica — finalità che giustifica parimenti i Root Fragments alla radice del Fractal Tree — evitando che domini intermedi privi di valenza propria nascondano le parti fondamentali del sistema.
 
-È raccomandato non collocare né promuovere un'unità nel Fractal Branch di un dominio superiore a quello individuato dai suoi consumatori effettivi per eludere la Legge della Separazione tra Pari tra unità sorelle: qualora l'unità costituisca un dettaglio interno consumato da un singolo Fragment fratello senza esigenza di esposizione esterna, è raccomandato incapsularla nella Private Category di quest'ultimo; qualora invece uno di due Fragments o di due Category Nodes debba dipendere dall'altro restando entrambi esposti dal dominio contenitore, è raccomandato ripartire tali unità in Sub-Categories ordinate da una Horizontal Hierarchy.
+All'interno di un Fractal Branch, quando un'unità condivisa riunisce più competenze correlate, è raccomandato incapsularle nei Fragment Nodes di un unico Fragment (esponendo i contratti necessari tramite il relativo Access Node) anziché smembrarle in Categories sorelle ordinate da una Horizontal Hierarchy che replicherebbe una stratificazione _n-tier_. È inoltre raccomandato non collocare né promuovere un'unità nel Fractal Branch di un dominio superiore a quello individuato dai suoi consumatori effettivi per eludere la Legge della Separazione tra Pari: se l'unità è consumata da un singolo Fragment fratello senza esigenza di esposizione esterna, è raccomandato incapsularla nella Private Category di quest'ultimo; se invece uno di due Fragments o di due Category Nodes deve dipendere dall'altro restando entrambi esposti dal dominio contenitore, è raccomandato ripartirli in Sub-Categories ordinate da una Horizontal Hierarchy.
 
 ### 8.3. Evoluzione Iterativa e Ricorsiva dell'Architettura
 
@@ -987,7 +995,7 @@ A ogni livello del Fractal Tree, è raccomandato adattare l'architettura selezio
 
 - **Estrazione**: separazione di Symbols autonomi in Logical Nodes distinti, quali ulteriori Fragment Nodes con Roles differenti o Category Nodes di una Private Category, oppure trasformazione di un Fragment Node in un Sub-Fragment collocato in una Private Category, quando la competenza estratta acquisisce dettagli collaboranti con Roles distinti o richiede un Sub-Graph Node dedicato. L'Estrazione confina l'unità estratta nel sotto-albero del Logical Domain genitore, senza renderla accessibile a Logical Nodes esterni a tale Logical Domain.
 - **Promozione**: spostamento di un'unità in una Category, eventualmente collocata in un Layer, di un Fractal Branch che ne amplia i consumatori autorizzati (es. dalla Private Category di un Fragment al Fractal Branch del medesimo Fragment, oppure dal Fractal Branch di un Logical Domain al Fractal Branch di un Logical Domain antenato). Quanto più elevato è il Logical Domain genitore del Fractal Branch destinatario, tanto più ampio è l'insieme dei consumatori autorizzati. La Promozione interviene alla comparsa effettiva di consumatori esterni al perimetro corrente, ha per destinazione il Fractal Branch del minimo Logical Domain antenato comune a tutti i consumatori effettivi e presuppone dipendenze ammesse dalle regole di visibilità e dalle Horizontal Hierarchies applicabili.
-- **Contrazione**: rimozione o riassorbimento di Layers, Sub-Layers, Sub-Categories, Fractal Branches o Sub-Fragments divenuti ridondanti o sproporzionati rispetto alla complessità effettiva del sotto-problema risolto (ivi inclusa la riconduzione di un Fractal Branch o di un Root Layer dalla stratificazione in Layers all'esposizione diretta di Categories).
+- **Contrazione**: rimozione o riassorbimento di Layers, Sub-Layers, Sub-Categories, Fractal Branches o Sub-Fragments divenuti ridondanti o sproporzionati rispetto alla complessità effettiva del sotto-problema risolto (ivi inclusi il riassorbimento di un Sub-Fragment nei Fragment Nodes del Parent Fragment e la riconduzione di un Fractal Branch o di un Root Layer dalla stratificazione in Layers all'esposizione diretta di Categories).
 
 Finché il contratto esposto dall'Access Node di un Fragment rimane invariato, ogni trasformazione confinata nel sotto-albero del Fragment resta trasparente ai consumatori esterni al Fragment.
 
