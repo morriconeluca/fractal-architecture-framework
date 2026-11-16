@@ -1,6 +1,6 @@
 # Fractal Architecture Framework (FAF)
 
-**_Working Draft - 15 Novembre 2026_**
+**_Working Draft - 16 Novembre 2026_**
 
 ---
 
@@ -128,7 +128,7 @@ Un _Fractal Tree_ è il sotto-albero della codebase con origine in una directory
 
 - **Il Principio della Forma Semantica**
 
-  > La gerarchia e la nomenclatura di file e directory devono rivelare lo scopo architetturale di ogni unità logica.
+  > La gerarchia e la nomenclatura di file e directory devono rivelare lo scopo architetturale di ogni unità logica, poiché in FAF determinano direttamente i confini di incapsulamento e le dipendenze ammesse.
 
 - **Il Principio della Proporzionalità**
 
@@ -195,7 +195,7 @@ Un _Fractal Tree_ è il sotto-albero della codebase con origine in una directory
   >
   > Più Horizontal Hierarchies possono coesistere sotto lo stesso genitore soltanto se ordinano insiemi disgiunti di figli diretti. I Ranks di Horizontal Hierarchies distinte non sono confrontabili.
   >
-  > Tra Logical Domains, una Declaration stabilisce una Horizontal Hierarchy individuando un singolo Logical Domain genitore e ordinando su almeno due Ranks distinti figli diretti effettivamente presenti sotto di esso, salvo il caso delle Sub-Categories, per le quali una Declaration può altresì stabilire modelli di Horizontal Hierarchy estesi al Fractal Tree.
+  > Tra Logical Domains, una Declaration stabilisce una Horizontal Hierarchy individuando un singolo Logical Domain genitore e ordinando su almeno due Ranks distinti figli diretti effettivamente presenti sotto di esso, salvo ove la presente specifica ammetta modelli di Horizontal Hierarchy estesi al Fractal Tree.
 
 - **Nomenclatura**
 
@@ -244,15 +244,15 @@ I Logical Nodes figli diretti di un Fragment, nel quale ciascun Role esplicito c
 
 In un Logical Node il cui Role ammette più Symbols possono coesistere esclusivamente Symbols mutuamente inscindibili all'interno della medesima competenza; Symbols autonomi richiedono Logical Nodes distinti o Sub-Fragments dedicati.
 
-La derivabilità meccanica tra Symbols non implica identità architetturale: Symbols associati a competenze distinte risiedono in Logical Nodes distinti con Roles differenti (es. uno schema di validazione e il rispettivo tipo inferito).
+La derivabilità meccanica tra Symbols non implica identità architetturale: Symbols associati a competenze distinte risiedono in Logical Nodes distinti con Roles differenti (es. uno schema di validazione e il rispettivo tipo inferito). È raccomandato non eludere la separazione delle competenze accorpando in un unico Symbol logiche o casi distinti del dominio che richiedono invece Logical Nodes distinti o Sub-Fragments dedicati.
 
 #### 6.1.3. Horizontal Hierarchy Interna e Modello dei Roles
 
 La Declaration del catalogo assegna a ciascun Role diverso da un Sub-Graph Role un Rank, in funzione del dominio e dello stack tecnologico. I Logical Nodes figli diretti di ciascun Fragment sono ordinati dalla Horizontal Hierarchy in cui ciascun Fragment Node assume il Rank del proprio Role, mentre l'Access Node e i Sub-Graph Nodes occupano congiuntamente il Rank immediatamente superiore al Rank massimo del catalogo. Ogni Fragment Node diverso dal Master Node ha Rank strettamente inferiore al Rank del Master Node.
 
-Poiché i Ranks del catalogo governano esclusivamente la composizione interna dei Fragment Nodes di un singolo Fragment e non una gerarchia tra Categories del Fractal Tree, nella Declaration del catalogo è raccomandato attenersi ai criteri seguenti:
+Poiché i Ranks del catalogo governano esclusivamente la composizione interna dei Fragment Nodes di un singolo Fragment e non una gerarchia tra Logical Domains del Fractal Tree, nella Declaration del catalogo è raccomandato attenersi ai criteri seguenti:
 
-- **Competenza architetturale e minimalità**: definire esclusivamente i Roles effettivamente richiesti, evitando Roles speculativi e qualifiche generiche, puramente infrastrutturali o coincidenti con costrutti sintattici del linguaggio e classi.
+- **Competenza architetturale e minimalità**: definire esclusivamente i Roles necessari a distinguere le competenze architetturali ricorrenti del dominio da quelle ausiliarie, evitando sia di ricondurre unità primarie del dominio a un Role ausiliario generico — occultandone la natura e impedendo al Fragment di comporre Fragment Nodes con tale Role — sia di introdurre Roles speculativi, circoscritti a una singola unità, puramente infrastrutturali o coincidenti con costrutti sintattici del linguaggio e classi; mentre il Role qualifica la competenza architetturale e il relativo Rank, lo scopo specifico della singola unità è espresso dal nome del Fragment o del Logical Node.
 - **Ordinamento e allineamento dei Ranks**: attribuire a un Role un Rank strettamente inferiore a quello di un altro Role unicamente quando i rispettivi Fragment Nodes possono coesistere nel medesimo Fragment con dipendenza diretta o transitiva; assegnare il medesimo Rank ai Roles ausiliari privi di dipendenza reciproca nel Fragment; allineare sul Rank massimo del catalogo i Roles le cui unità esistono esclusivamente come Master Nodes, imponendo la composizione di responsabilità primarie distinte tramite i rispettivi Access Nodes.
 - **Separazione rispetto ai confini contrattuali**: qualora una medesima famiglia concettuale o tecnologica comprenda sia Fragment Nodes sorgente da cui altri Fragment Nodes (quali `type`) derivano contratti, sia Fragment Nodes consumatori che dipendono da tali contratti, distinguere Roles specifici collocati ai rispettivi lati di tale confine anziché adottare un unico Role generico che produrrebbe dipendenze cicliche nel Fragment (es. nel modello seguente: `constant` prima di `type` rispetto a `config` e `mock` dopo `type`; `style`, `module` e `recipe` prima di `type` rispetto a `styled` dopo `type`; `schema` e `contract` prima di `type` rispetto a `handler` e `route` dopo `type`).
 
@@ -408,7 +408,7 @@ src/                                           <-- Root Fragment
         └── app.tsx                            <-- Root Node (Rank 0)
 ```
 
-> **Nota**: Le Declarations enumerano `main.css` e `main.tsx` come Root Nodes di `src/`, con Ranks rispettivamente 0 e 1, `app/` come Root Fragment figlio diretto di `src/` e `app.tsx` come Root Node di `app/`. Pur non essendo imposta da strumenti esterni, `app/` è modellata come Root Fragment figlio diretto di `src/` per porre in evidenza alla radice del Fractal Tree l'unità primaria dell'applicazione senza incapsularla in una Private Category o nel Fractal Branch di `src/`. La Horizontal Hierarchy di `src/` autorizza `main.tsx` a importare `main.css`; una distinta Declaration autorizza `src/main.tsx` a importare `src/app/app.tsx`. Il Rank di `app.tsx` non partecipa alla Horizontal Hierarchy di `src/`. I file `vite-env.d.ts` e `README.md` sono identificati come Foreign Nodes da Declarations.
+> **Nota**: Le Declarations enumerano `main.css` e `main.tsx` come Root Nodes di `src/`, con Ranks rispettivamente 0 e 1, `app/` come Root Fragment figlio diretto di `src/` e `app.tsx` come Root Node di `app/`. Pur non essendo imposta da strumenti esterni, `app/` è modellata come Root Fragment figlio diretto di `src/` per porre in evidenza alla radice del Fractal Tree l'unità primaria dell'applicazione senza occultarla in Logical Domains Organizational interni a `src/`. La Horizontal Hierarchy di `src/` autorizza `main.tsx` a importare `main.css`; una distinta Declaration autorizza `src/main.tsx` a importare `src/app/app.tsx`. Il Rank di `app.tsx` non partecipa alla Horizontal Hierarchy di `src/`. I file `vite-env.d.ts` e `README.md` sono identificati come Foreign Nodes da Declarations.
 
 ##### Esempio 6.2.3.2. Root Fragments gerarchici con File-System Routing (Next.js App Router)
 
@@ -452,7 +452,7 @@ In base alla forma che la Declaration del catalogo stabilisce per ciascun Role, 
 
 Un Role dotato di estensioni implicite adotta la forma Category Nodes nell'intero Fractal Tree; una Declaration che gli assegni la forma Fragments è contraddittoria.
 
-Per i restanti Roles, nella Declaration del catalogo è raccomandato adottare la forma Category Nodes quando gli elementi classificati non richiedono composizione interna (Fragment Nodes, Private Categories o Fractal Branches) né Sub-Graph Nodes dedicati (es. `constant`, `model`, `type`, `config`, `mock`); negli altri casi è raccomandata la forma Fragments.
+Per i restanti Roles, nella Declaration del catalogo è raccomandato adottare la forma Category Nodes quando gli elementi classificati non richiedono composizione in Fragment Nodes o Sub-Fragments né Sub-Graph Nodes dedicati (es. `constant`, `model`, `type`, `config`, `mock`); negli altri casi è raccomandata la forma Fragments.
 
 Tra Fragments fratelli e tra Category Nodes fratelli è interdetta qualsiasi Horizontal Hierarchy.
 
@@ -973,6 +973,7 @@ L'utilizzo dei Path Aliases è soggetto a due vincoli:
   - nel Fractal Branch del minimo Logical Domain antenato comune a tutti i consumatori di tale dettaglio, quando i consumatori non sono confinati ai soli Logical Nodes figli diretti di un unico Fragment o Root Fragment (es. consumatori distribuiti tra sotto-alberi distinti, tra un Fragment e un proprio Sub-Fragment, oppure Category Nodes).
 - **Rilevanza semantica di dominio e leggibilità per scala**: in virtù della natura frattale del framework, l'evidenza del dominio (_Screaming Architecture_) opera ricorsivamente a ogni livello di scala e non consiste nell'appiattire le unità alla radice del Fractal Tree: la radice esprime l'identità del sistema alla scala più ampia e ciascun Logical Domain Functional rivela al proprio interno i concetti primari del sotto-problema che governa. A parità di scala, è raccomandato collocare un'unità che modella una partizione primaria o un concetto fondante dove il suo ruolo è immediatamente leggibile — quale Root Fragment alla radice del Fractal Tree oppure nel Logical Domain Organizational che ne esprime la competenza (es. un Layer o una Category del Root Layer o del Fractal Branch pertinente) — anche qualora conti un unico consumatore; la potenziale riusabilità tecnica di un'unità non costituisce rilevanza semantica di dominio.
 - **Corrispondenza tra contenimento e flusso delle dipendenze**: è raccomandato che la gerarchia dei Logical Domains rifletta la direzione effettiva delle dipendenze, collocando in rapporto di contenimento unità in cui l'una orchestra l'altra anziché disporle come fratelli paritetici il cui ordine di dipendenza non risulterebbe leggibile dal file system; specularmente, è raccomandato non incapsulare un'unità fondante del dominio all'interno di un collaboratore ausiliario solo perché quest'ultimo la invoca, facendo invece coordinare entrambi dal dominio superiore.
+- **Autodescrizione per livello di scala**: a ogni livello del Fractal Tree, è raccomandato verificare che i soli figli diretti di ciascun Logical Domain bastino — senza ispezionare i sotto-alberi né il codice — a identificare le unità del sotto-problema risolto a quella scala, le rispettive competenze architetturali e la direzione delle loro dipendenze. La concentrazione delle unità primarie in un'unica Category ausiliaria generica segnala un catalogo privo di Roles specifici del dominio; l'interposizione di Fragments dal nome procedurale generico, privi di valenza autonoma nel dominio e introdotti al solo scopo di raggruppare fasi coordinate dal Logical Domain Functional contenitore, occulta le partizioni effettive sotto livelli ridondanti che è raccomandato riassorbire nei Logical Nodes e nelle Private Categories figli diretti di quest'ultimo.
 
 ### 8.2. Controllo della Profondità e Dualità tra Incapsulamento e Horizontal Hierarchy
 

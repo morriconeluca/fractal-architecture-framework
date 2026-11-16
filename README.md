@@ -30,7 +30,7 @@ La specifica completa, con principi, leggi del _Dependency Graph_, tassonomia de
 
 ### Working Draft
 
-La specifica è una bozza in evoluzione (_Working Draft - 15 Novembre 2026_). La conformità a FAF richiede il rispetto di tutte le norme della specifica e di tutte le Declarations dell'architetto, indipendentemente dagli strumenti di verifica adottati (es. analisi statica, _fitness functions_): il repository non fornisce strumenti di verifica automatica.
+La specifica è una bozza in evoluzione (_Working Draft - 16 Novembre 2026_). La conformità a FAF richiede il rispetto di tutte le norme della specifica e di tutte le Declarations dell'architetto, indipendentemente dagli strumenti di verifica adottati (es. analisi statica, _fitness functions_): il repository non fornisce strumenti di verifica automatica.
 
 ### Lingua della Specifica
 
