@@ -78,8 +78,9 @@ Before submitting a pull request that touches `FAF.md`, verify that:
 - [ ] Every example's imports respect the laws of §5 and the visibility rules of the involved Logical Domains.
 - [ ] Section numbers, cross-references and the Table of Contents are updated.
 - [ ] [`README.md`](./README.md) is still accurate.
+- [ ] [`CHANGELOG.md`](./CHANGELOG.md) is updated under `[Unreleased]`.
 
-The maintainer updates the Working Draft date when merging normative changes.
+The maintainer updates the Working Draft date and promotes `[Unreleased]` in [`CHANGELOG.md`](./CHANGELOG.md) when cutting a new Working Draft.
 
 ## Translation
 

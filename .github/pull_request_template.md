@@ -30,6 +30,7 @@
 - [ ] Every example's imports respect the laws of §5 and the visibility rules of the involved Logical Domains.
 - [ ] Section numbers, cross-references and the Table of Contents are updated.
 - [ ] `README.md` is still accurate.
+- [ ] `CHANGELOG.md` is updated under `[Unreleased]`.
 
 ## License
 
