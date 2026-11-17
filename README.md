@@ -26,15 +26,25 @@ La specifica completa, con principi, leggi del _Dependency Graph_, tassonomia de
 
 - [Fractal Architecture Framework (FAF)](./FAF.md)
 
+## Istruzioni per Coding Agents
+
+Per agevolare l'adozione di FAF con agenti di codifica basati su LLM, il repository mette a disposizione un file `AGENTS.md` in lingua inglese che sintetizza norme, raccomandazioni e modelli di riferimento del framework, utilizzabile a discrezione nelle proprie codebase accanto alle Declarations di progetto (`FAF.md` resta l'unica fonte normativa):
+
+- [AGENTS.md](./agents/AGENTS.md)
+
 ## Stato del Progetto
 
 ### Working Draft
 
 La specifica è una bozza in evoluzione (_Working Draft - 16 Novembre 2026_). La conformità a FAF richiede il rispetto di tutte le norme della specifica e di tutte le Declarations dell'architetto, indipendentemente dagli strumenti di verifica adottati (es. analisi statica, _fitness functions_): il repository non fornisce strumenti di verifica automatica.
 
+Lo storico delle Working Draft e delle modifiche al repository è disponibile in lingua inglese:
+
+- [Changelog](./CHANGELOG.md)
+
 ### Lingua della Specifica
 
-Al momento, tutta la documentazione è disponibile esclusivamente in lingua italiana. È in lavorazione la traduzione completa in inglese, che verrà rilasciata non appena sarà pronta.
+Al momento, la specifica completa (`FAF.md`) è disponibile esclusivamente in lingua italiana. È in lavorazione la traduzione completa in inglese, che verrà rilasciata non appena sarà pronta.
 
 ### Contribuire al Progetto
 
@@ -46,7 +56,7 @@ Prima di contribuire, consultare le linee guida:
 
 ## Licenza
 
-La documentazione è rilasciata sotto licenza Creative Commons Attribuzione 4.0 Internazionale. Le eventuali porzioni incorporate nel codice sorgente sono invece rilasciate sotto licenza BSD 3-Clause.
+La documentazione è rilasciata sotto licenza Creative Commons Attribuzione 4.0 Internazionale. Le eventuali porzioni incorporate nel codice sorgente (incluso l'inserimento di `AGENTS.md` in una codebase) sono invece rilasciate sotto licenza BSD 3-Clause.
 
 Per i dettagli completi, consultare il file:
 
